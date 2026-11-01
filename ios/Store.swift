@@ -133,16 +133,19 @@ enum Store {
     }
 
     static func summaries() -> [[String: Any]] {
-        conversations()
-            .map { conversation in
-                [
-                    "id": conversation["id"] as? String ?? "",
-                    "title": conversation["title"] as? String ?? "New chat",
-                    "updatedAt": conversation["updatedAt"] as? Double ?? 0,
-                    "provider": conversation["provider"] as? String ?? "deepseek"
-                ]
-            }
-            .sorted { ($0["updatedAt"] as? Double ?? 0) > ($1["updatedAt"] as? Double ?? 0) }
+        var out: [[String: Any]] = []
+        for conversation in conversations() {
+            let id: String = conversation["id"] as? String ?? ""
+            let title: String = conversation["title"] as? String ?? "New chat"
+            let updated: Double = conversation["updatedAt"] as? Double ?? 0
+            let provider: String = conversation["provider"] as? String ?? "deepseek"
+            out.append(["id": id, "title": title, "updatedAt": updated, "provider": provider])
+        }
+        return out.sorted { left, right in
+            let a: Double = left["updatedAt"] as? Double ?? 0
+            let b: Double = right["updatedAt"] as? Double ?? 0
+            return a > b
+        }
     }
 
     static func conversation(_ id: String) -> [String: Any]? {
