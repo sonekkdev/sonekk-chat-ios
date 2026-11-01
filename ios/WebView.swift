@@ -18,7 +18,9 @@ struct WebView: UIViewRepresentable {
 
         context.coordinator.bridge.webView = webView
 
-        if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
+        let root = Bundle.main.url(forResource: "index", withExtension: "html")
+        let nested = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "web-ios")
+        if let url = root ?? nested {
             webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
         }
 
